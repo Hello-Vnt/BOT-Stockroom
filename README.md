@@ -8,7 +8,7 @@ A tiny inventory log for small shops. Every restock, sale or correction is stamp
 
 | | |
 |---|---|
-| Live site | https://hello-vnt.github.io/BOT-Stockroom/ |
+| Live site | https://www.botstockroom.website/ |
 | Contract (BOT Chain mainnet, chain ID 677) | [`0xa25771b68d4d8492fef3c2b9AF0e2a545C5E00B7`](https://scan.botchain.ai/address/0xa25771b68d4d8492fef3c2b9AF0e2a545C5E00B7) |
 | Contract (testnet, chain ID 968) | _not deployed yet_ |
 
