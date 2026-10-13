@@ -8,7 +8,7 @@ A tiny inventory log for small shops. Every restock, sale or correction is stamp
 
 | | |
 |---|---|
-| Live site | _not published yet_ |
+| Live site | https://hello-vnt.github.io/BOT-Stockroom/ |
 | Contract (BOT Chain mainnet, chain ID 677) | [`0xa25771b68d4d8492fef3c2b9AF0e2a545C5E00B7`](https://scan.botchain.ai/address/0xa25771b68d4d8492fef3c2b9AF0e2a545C5E00B7) |
 | Contract (testnet, chain ID 968) | _not deployed yet_ |
 
@@ -50,7 +50,7 @@ To verify the source on the explorer, use "Standard JSON input" with `build/Stoc
 
 ## 2. Publish the site
 
-Push the repository to GitHub and turn on Pages (Settings → Pages). For a custom domain, add it there, which creates the `CNAME` file. The public view is `https://<your-domain>/?shop=<wallet address>`.
+GitHub Pages serves the `gh-pages` branch, so publish with `git push origin main:gh-pages` after pushing `main`. For a custom domain, add it under Settings → Pages, which creates the `CNAME` file. The public view is `https://<your-domain>/?shop=<wallet address>`.
 
 ## How it works
 
