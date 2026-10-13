@@ -18,7 +18,7 @@ A tiny inventory log for small shops. Every restock, sale or correction is stamp
 - `contracts/Stockroom.sol` — the contract (Solidity ^0.8.20)
 - `deploy.html` — one-click deploy from MetaMask
 - `build/` — compiled ABI and bytecode, plus the standard JSON input for explorer verification
-- `tools/` — scripts that compile the contract, test it, and run a local chain
+- `tools/` — scripts that compile the contract and test it
 - `images/bot-chain-black.png` — the BOT Chain logo used in the footer
 
 ## Run locally
@@ -66,7 +66,4 @@ GitHub Pages serves the `gh-pages` branch, so publish with `git push origin main
 npm --prefix tools install
 node tools/compile.mjs        # writes build/
 node tools/test-contract.mjs  # runs the contract on an in-memory chain
-node tools/dev-chain.mjs      # local chain on :8545 with the contract and a demo shop
 ```
-
-With `dev-chain` running, http://localhost:4604/?net=local reads from the local chain. `?net=local` only works on localhost.

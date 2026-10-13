@@ -4,8 +4,7 @@
   "type": "module",
   "scripts": {
     "compile": "node compile.mjs",
-    "test": "node test-contract.mjs",
-    "dev-chain": "node dev-chain.mjs"
+    "test": "node test-contract.mjs"
   },
   "devDependencies": {
     "ethers": "^6.13.0",

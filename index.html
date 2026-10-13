@@ -830,8 +830,6 @@
       // `contract` is the single source for the app, the footer and the explorer link.
       mainnet: { chainId: 677, name: 'BOT Chain', rpc: 'https://rpc.botchain.ai', explorer: 'https://scan.botchain.ai', contract: '0xa25771b68d4d8492fef3c2b9AF0e2a545C5E00B7', fromBlock: 0 },
       testnet: { chainId: 968, name: 'BOT Chain Testnet', rpc: 'https://rpc.bohr.life', explorer: 'https://scan.bohr.life', contract: '', fromBlock: 0 },
-      // Only reachable on localhost with ?net=local — the chain started by `node tools/dev-chain.mjs`.
-      local: { chainId: 1337, name: 'Local dev chain', rpc: 'http://127.0.0.1:8545', explorer: '', contract: '0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab', fromBlock: 0 },
     },
     // Wallet whose stockroom opens from "View demo shop". While empty, the demo shows built-in sample data.
     demoShop: '',
@@ -863,8 +861,7 @@
 
   const params = new URLSearchParams(location.search);
   const isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
-  const netParam = params.get('net');
-  const netKey = netParam === 'testnet' || (netParam === 'local' && isLocal) ? netParam : 'mainnet';
+  const netKey = params.get('net') === 'testnet' ? 'testnet' : 'mainnet';
   const NET = { ...CONFIG.networks[netKey] };
   // On localhost, pick up an address deployed from deploy.html so it can be tried before editing CONFIG.
   if (!NET.contract && isLocal) NET.contract = storage('sr.contract.' + NET.chainId) || '';
