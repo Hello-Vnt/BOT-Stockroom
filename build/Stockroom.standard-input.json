@@ -1,0 +1,23 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Stockroom.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\n/// @title BOT Stockroom\n/// @notice A tiny inventory log. Each wallet has its own stockroom, and every\n///         change to a product's quantity is appended to a history that can\n///         never be edited or deleted. No tokens, payments or admin.\ncontract Stockroom {\n    struct Product {\n        string name;\n        string sku;\n        uint32 qty;\n        uint32 lowAt;\n        uint64 updatedAt;\n    }\n\n    /// @dev reason: 0 Restock, 1 Sale, 2 Damaged, 3 Correction\n    struct Change {\n        int32 delta;\n        uint32 qtyAfter;\n        uint8 reason;\n        uint64 at;\n    }\n\n    uint8 public constant MAX_REASON = 3;\n    uint256 public constant MAX_NAME_LENGTH = 64;\n    uint256 public constant MAX_SKU_LENGTH = 32;\n\n    mapping(address => Product[]) private products;\n    mapping(address => mapping(uint256 => Change[])) private history;\n\n    event ProductAdded(address indexed shop, uint256 indexed id, string name);\n    event StockChanged(address indexed shop, uint256 indexed id, int32 delta, uint32 qtyAfter, uint8 reason);\n\n    error EmptyName();\n    error TextTooLong();\n    error QuantityTooLarge();\n    error ProductNotFound();\n    error ZeroDelta();\n    error InvalidReason();\n    error BelowZero();\n\n    /// @notice Add a product to the caller's stockroom. The starting quantity\n    ///         is logged as the first change in its history (as a restock).\n    function addProduct(string calldata name, string calldata sku, uint32 qty, uint32 lowAt) external returns (uint256 id) {\n        if (bytes(name).length == 0) revert EmptyName();\n        if (bytes(name).length > MAX_NAME_LENGTH || bytes(sku).length > MAX_SKU_LENGTH) revert TextTooLong();\n        if (qty > uint32(type(int32).max)) revert QuantityTooLarge();\n\n        id = products[msg.sender].length;\n        products[msg.sender].push(Product(name, sku, qty, lowAt, uint64(block.timestamp)));\n        history[msg.sender][id].push(Change(int32(qty), qty, 0, uint64(block.timestamp)));\n\n        emit ProductAdded(msg.sender, id, name);\n        emit StockChanged(msg.sender, id, int32(qty), qty, 0);\n    }\n\n    /// @notice Add to or take from one of the caller's own products.\n    function adjustStock(uint256 id, int32 delta, uint8 reason) external {\n        if (id >= products[msg.sender].length) revert ProductNotFound();\n        if (delta == 0) revert ZeroDelta();\n        if (reason > MAX_REASON) revert InvalidReason();\n\n        Product storage product = products[msg.sender][id];\n        int64 next = int64(uint64(product.qty)) + delta;\n        if (next < 0) revert BelowZero();\n        if (next > int64(type(int32).max)) revert QuantityTooLarge();\n\n        uint32 qtyAfter = uint32(uint64(next));\n        product.qty = qtyAfter;\n        product.updatedAt = uint64(block.timestamp);\n        history[msg.sender][id].push(Change(delta, qtyAfter, reason, uint64(block.timestamp)));\n\n        emit StockChanged(msg.sender, id, delta, qtyAfter, reason);\n    }\n\n    function getProducts(address shop) external view returns (Product[] memory) {\n        return products[shop];\n    }\n\n    function getHistory(address shop, uint256 id) external view returns (Change[] memory) {\n        return history[shop][id];\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode.object"
+        ]
+      }
+    }
+  }
+}
